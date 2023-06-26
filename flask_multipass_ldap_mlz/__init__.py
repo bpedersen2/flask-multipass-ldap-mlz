@@ -28,10 +28,11 @@ class MLZLDAPGroup(LDAPGroup):
             for uid in group_data.get('memberUid'):
                 _, user_data = get_user_by_id(uid)
                 user_data = to_unicode(user_data)
-                yield IdentityInfo(
-                    self.provider,
-                    identifier=user_data[self.ldap_settings['uid']][0],
-                    **user_data)
+                if user_data:
+                    yield IdentityInfo(
+                        self.provider,
+                        identifier=user_data[self.ldap_settings['uid']][0],
+                        **user_data)
 
     def has_member(self, user_identifier):
         with ldap_context(self.ldap_settings):
